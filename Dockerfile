@@ -38,7 +38,14 @@ COPY --from=builder /build/rippled /usr/local/bin/
 RUN groupadd --gid 1000 rippled \
   && useradd --uid 1000 --gid rippled --shell /bin/bash --create-home rippled
 
+RUN mkdir -p /var/lib/rippled && chown -R rippled /var/lib/rippled
+
 USER rippled
+
+RUN mkdir -p /home/rippled/.config/ripple
+
+COPY --from=builder /rippled/cfg/rippled-example.cfg /home/rippled/.config/ripple/rippled.cfg
+COPY --from=builder /rippled/cfg/validators-example.txt /home/rippled/.config/ripple/validators.txt
 
 # P2P && RPC
 EXPOSE 51235 5005
